@@ -21,8 +21,11 @@ router.post( '/', ( req, res ) => {
     pool.query( queryString, [ req.body.name, req.body.description, req.body.link ] )
     .then( result => {
         res.sendStatus( 201 );
-    }).catch( )
-})
+    }).catch( err => {
+        console.log( 'error in POST query:', err );
+        res.sendStatus( 500 );
+    }) // end query
+}) // end POST route
 // PUT /treats/<id>
 
 // DELETE /treats/<id>
