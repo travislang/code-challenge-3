@@ -28,6 +28,18 @@ router.post( '/', ( req, res ) => {
     }); // end query
 }); // end POST route
 // PUT /treats/<id>
+router.put( '/:id', ( req, res ) => {
+    let id = req.params.id;
+    let queryString = `UPDATE "treats" SET "description" = $1
+    WHERE "id" = $2;`;
+    pool.query( queryString, [ req.body.description, id ] )
+    .then( result => {
+        res.sendStatus( 201 );
+    }).catch( err => {
+        console.log( 'there was an error in put route:', err );
+        res.sendStatus( 500 );
+    });//end query
+});// end PUT route
 
 // DELETE /treats/<id>
 router.delete( '/:id', ( req, res ) => {
@@ -41,5 +53,6 @@ router.delete( '/:id', ( req, res ) => {
         res.sendStatus( 500 );
     });// end query
 });// end DELETE route
+
 
 module.exports = router;
