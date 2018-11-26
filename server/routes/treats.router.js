@@ -4,14 +4,28 @@ const pool = require('../modules/pool');
 
 // GET /treats
 router.get( '/', ( req, res ) => {
-    let queryString = `SELECT * FROM "treats" ORDER BY "id" ASC;`;
-    pool.query( queryString )
-    .then( result => {
-        res.send( result.rows );
-    }).catch( err => {
-        console.log( 'error in GET query:', err );
-        res.sendStatus( 500 );
-    }); // end query
+    console.log( req.query.q )
+    if( req.query.q ){
+        let queryString = `SELECT * FROM "treats"
+        WHERE "name" ILIKE ('%' || $1 || '%');`;
+        pool.query(queryString, [req.query.q])
+            .then(result => {
+                res.send(result.rows);
+            }).catch(err => {
+                console.log('error in GET query:', err);
+                res.sendStatus(500);
+            });
+    }
+    else{ 
+        let queryString = `SELECT * FROM "treats" ORDER BY "id" ASC;`;
+        pool.query(queryString )
+            .then(result => {
+                res.send(result.rows);
+            }).catch(err => {
+                console.log('error in GET query:', err);
+                res.sendStatus(500);
+            });
+    }
 }) // end GET route
 
 // POST /treats
@@ -53,6 +67,5 @@ router.delete( '/:id', ( req, res ) => {
         res.sendStatus( 500 );
     });// end query
 });// end DELETE route
-
 
 module.exports = router;
