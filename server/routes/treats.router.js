@@ -4,7 +4,7 @@ const pool = require('../modules/pool');
 
 // GET /treats
 router.get( '/', ( req, res ) => {
-    console.log( req.query.q )
+    // if user entered something to filter or search by
     if( req.query.q ){
         let queryString = `SELECT * FROM "treats"
         WHERE "name" ILIKE ('%' || $1 || '%');`;
@@ -16,6 +16,7 @@ router.get( '/', ( req, res ) => {
                 res.sendStatus(500);
             });
     }
+    // if nothing was entered to search by
     else{ 
         let queryString = `SELECT * FROM "treats" ORDER BY "id" ASC;`;
         pool.query(queryString )
